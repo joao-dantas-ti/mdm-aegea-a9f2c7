@@ -83,7 +83,7 @@ footer{text-align:center;color:#334155;font-size:11px;padding:16px}
 </div>
 <div style="margin-bottom:16px"><div class="card"><h3>Provisionamentos no C4M — Maio/2026 <span>Por Dia</span></h3><canvas id="cMensal" style="max-height:200px!important"></canvas></div></div>
 <div class="card" style="margin-bottom:16px">
-  <h3 id="tHeader">Dispositivos Inativos (+90 dias sem comunicacao) <span id="tCount"></span></h3>
+  <h3 id="tHeader">Inativos Urmobo — +90 dias sem comunicacao <span id="tCount"></span></h3>
   <div style="display:flex;gap:8px;margin-bottom:10px">
     <button id="btnT30" class="btn" onclick="setThreshold(30)" style="background:#1e3a5f">+30 dias</button>
     <button id="btnT60" class="btn" onclick="setThreshold(60)" style="background:#1e3a5f">+60 dias</button>
@@ -164,7 +164,7 @@ function setThreshold(n){
     b.style.borderColor=v===n?'#60a5fa':'#2d5986';
   });
   var h=document.getElementById('tHeader');
-  if(h)h.innerHTML='Dispositivos Inativos (+'+n+' dias sem comunicacao) <span id="tCount"></span>';
+  if(h)h.innerHTML='Inativos Urmobo &mdash; +'+n+' dias sem comunicacao <span id="tCount"></span>';
   renderT();
 }
 
