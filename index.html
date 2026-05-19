@@ -216,6 +216,38 @@ function expCSV(){
   var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='Inativos_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 
+function filtD(){
+  var q=document.getElementById('srchD').value.toLowerCase();
+  return DUPLICADOS.filter(function(r){
+    if(activeUNI&&r.uniU!==activeUNI&&r.uniC!==activeUNI)return false;
+    if(q){var all=r.imei+' '+r.nomeU+' '+r.uniU+' '+r.nomeC+' '+r.uniC+' '+r.fab+' '+r.mod;if(all.toLowerCase().indexOf(q)<0)return false;}
+    return true;
+  });
+}
+function srtD(col){if(sColD===col)sDirD*=-1;else{sColD=col;sDirD=1;}pgD=0;renderDup();}
+function renderDup(){
+  var data=filtD().sort(function(a,b){return String(a[sColD]).localeCompare(String(b[sColD]))*sDirD;});
+  var tot=data.length,maxPg=Math.max(0,Math.ceil(tot/PS)-1);
+  if(pgD>maxPg)pgD=maxPg;
+  var sl=data.slice(pgD*PS,(pgD+1)*PS);
+  var kd=document.getElementById('kpiDup'); if(kd) kd.textContent=tot.toLocaleString('pt-BR');
+  var dc=document.getElementById('dCount'); if(dc) dc.textContent=tot+' registros';
+  var di=document.getElementById('dInfo'); if(di) di.textContent='Exibindo '+(pgD*PS+1)+'-'+Math.min((pgD+1)*PS,tot)+' de '+tot;
+  var dp=document.getElementById('pgDInfo'); if(dp) dp.textContent='Pagina '+(pgD+1)+' de '+Math.max(1,Math.ceil(tot/PS));
+  var rows=sl.map(function(r){
+    return '<tr><td>'+r.imei+'</td><td>'+r.nomeU+'</td><td>'+r.uniU+'</td><td>'+r.ufU+'</td><td>'+r.nomeC+'</td><td>'+r.uniC+'</td><td>'+r.fab+'</td><td>'+r.mod+'</td></tr>';
+  });
+  var db=document.getElementById('dBody'); if(db) db.innerHTML=rows.join('');
+}
+function expDupCSV(){
+  var data=filtD();
+  var hdr='IMEI,Nome Urmobo,Unidade Urmobo,UF Urmobo,Nome C4M,Unidade C4M,Fabricante,Modelo';
+  var rows=data.map(function(r){return [r.imei,r.nomeU,r.uniU,r.ufU,r.nomeC,r.uniC,r.fab,r.mod].map(function(v){return '"'+String(v).replace(/"/g,'""')+'\"';}).join(',');});
+  var csv='﻿'+hdr+'\n'+rows.join('\n');
+  var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='Duplicados_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+
+
 function mk(id,type,labels,datasets,opts){
   if(charts[id])charts[id].destroy();
   var ctx=document.getElementById(id).getContext('2d');
